@@ -35,5 +35,20 @@ body {
     outline: 1px solid #ccc;
 }
 .tree {
-    background: #67c23a;
+    background: #84c961;
+}
+.bar {
+    background: salmon;
+}
+.square {
+    background: #6eb9ff;
+}
+.zee {
+    background: #be72fc;
+}
+.elLeft {
+    background: #fff674;
+}
+.elRight {
+    background: #ffb23f;
 }

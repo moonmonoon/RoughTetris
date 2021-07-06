@@ -1,3 +1,5 @@
+import BLOCKS from "./blocks.js"
+
 // DOM
 const playground = document.querySelector(".playground > ul");
     //console.log(playground)
@@ -11,16 +13,6 @@ let score = 0;
 let duration = 500; //블록이 떨어지는 시간
 let downInterval;
 let tempMovingItem; //움직이기 전 저장
-
-//블록 만들기
-const BLOCKS = {
-    tree: [
-        [[2,1],[0,1],[1,0],[1,1]],
-        [[1,2],[0,1],[1,0],[1,1]],
-        [[1,2],[0,1],[2,1],[1,1]],
-        [[2,1],[1,2],[1,0],[1,1]],
-    ]
-}
 
 const movingItem = { //다음블럭의 타입, 좌표 정보
     type: "tree",
@@ -90,6 +82,10 @@ function seizeBlock(){
     generateNewBlock()
 }
 function generateNewBlock(){
+    const blockArray = Object.entries(BLOCKS);
+    const randomIndex = Math.floor(Math.random() * blockArray.length)
+    
+    movingItem.type = blockArray[randomIndex][0]
     movingItem.top = 0;
     movingItem.left = 3;
     movingItem.direction = 0;
