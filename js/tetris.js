@@ -140,7 +140,7 @@ function dropBlock(){
     clearInterval(downInterval);
     downInterval = setInterval(() => {
         moveBlock("top", 1)
-    }, 10)
+    }, 20)
 }
 function showGameoverText(){
     gameText.style.display = "flex";
