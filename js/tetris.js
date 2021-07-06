@@ -87,7 +87,14 @@ function seizeBlock(){
         moving.classList.remove("moving");
         moving.classList.add("seized");
     })
-
+    generateNewBlock()
+}
+function generateNewBlock(){
+    movingItem.top = 0;
+    movingItem.left = 3;
+    movingItem.direction = 0;
+    tempMovingItem = {...movingItem};
+    renderBlocks()
 }
 function checkEmpty(target){ //블록이 밖으로 벗어나지 않도록, 맨 하단의 블록 체크
     if(!target || target.classList.contains("seized")){
