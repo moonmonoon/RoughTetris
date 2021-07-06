@@ -79,13 +79,31 @@ function seizeBlock(){
         moving.classList.remove("moving");
         moving.classList.add("seized");
     })
+    checkMatch()
+}
+function checkMatch(){
+    
+    const childNodes = playground.childNodes;
+    childNodes.forEach(child=>{
+        let matched = true;
+        child.children[0].childNodes.forEach(li=>{
+            if(!li.classList.contains("seized")){
+                matched = false;
+            }
+        })
+        if(matched){
+            child.remove();
+            prependNewLine()
+        }
+    })
+
     generateNewBlock()
 }
 function generateNewBlock(){
 
     clearInterval(downInterval); 
     downInterval = setInterval(()=>{
-        moveBlock('top', 1)
+        moveBlock("top", 1)
     },duration)
 
     const blockArray = Object.entries(BLOCKS);
@@ -113,6 +131,12 @@ function changeDirection(){
     direction === 3 ? tempMovingItem.direction = 0 : tempMovingItem.direction += 1;
     renderBlocks()
 }
+function dropBlock(){
+    clearInterval(downInterval);
+    downInterval = setInterval(()=>{
+        moveBlock("top", 1)
+    },10)
+}
 
 // event handling
 document.addEventListener("keydown", e=> {
@@ -126,8 +150,11 @@ document.addEventListener("keydown", e=> {
         case 40: //아래 이동
             moveBlock("top", 1);
             break;
-        case 38: //회전
+        case 38: //회전 (위쪽 화살표)
             changeDirection();
+            break;
+        case 32: //블록 떨어뜨리기 (스페이스바)
+            dropBlock();
             break;
         default:
             break;
