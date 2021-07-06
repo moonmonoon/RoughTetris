@@ -16,15 +16,15 @@ let tempMovingItem; //움직이기 전 저장
 const BLOCKS = {
     tree: [
         [[2,1],[0,1],[1,0],[1,1]],
-        [],
-        [],
-        [],
+        [[1,2],[0,1],[1,0],[1,1]],
+        [[1,2],[0,1],[2,1],[1,1]],
+        [[2,1],[1,2],[1,0],[1,1]],
     ]
 }
 
 const movingItem = { //다음블럭의 타입, 좌표 정보
     type: "tree",
-    direction: 0, //블록 회전 지표
+    direction: 1, //블록 회전 지표
     top: 0, //블록 상하 값
     left: 0 //블록 좌우 값
 
@@ -52,15 +52,16 @@ function prependNewLine() {
     li.prepend(ul)
     playground.prepend(li)
 }
-function renderBlocks(){
+function renderBlocks(moveType = ""){
     const { type, direction, top, left } = tempMovingItem;
     const movingBlocks = document.querySelectorAll(".moving");
     movingBlocks.forEach(moving => {
         moving.classList.remove(type, "moving");
     })
-    BLOCKS[type][direction].forEach(block=>{
+    BLOCKS[type][direction].some(block=>{
         const x = block[0] + left;
         const y = block[1] + top;
+        console.log(playground.childNodes[y])
         const target = playground.childNodes[y] ?  playground.childNodes[y].childNodes[0].childNodes[x] : null;
         const isAvailable = checkEmpty(target);
         if(isAvailable){
@@ -69,23 +70,41 @@ function renderBlocks(){
             tempMovingItem = { ...movingItem }
             setTimeout(()=>{
                 renderBlocks(); //좌표 원상복구 시키고 재귀함수 호출
+                if(moveType === "top"){
+                    seizeBlock();
+                }
             }, 0)
+            return true;
         }
     })
     movingItem.left = left;
     movingItem.top = top;
     movingItem.direction = direction;
 }
+function seizeBlock(){
+    const movingBlocks = document.querySelectorAll(".moving");
+    movingBlocks.forEach(moving => {
+        moving.classList.remove("moving");
+        moving.classList.add("seized");
+    })
+
+}
 function checkEmpty(target){ //블록이 밖으로 벗어나지 않도록, 맨 하단의 블록 체크
-    if(!target){
+    if(!target || target.classList.contains("seized")){
         return false;
     }
     return true;
 }
 function moveBlock(moveType, amount){
     tempMovingItem[moveType] += amount;
+    renderBlocks(moveType)
+}
+function changeDirection(){
+    const direction = tempMovingItem.direction;
+    direction === 3 ? tempMovingItem.direction = 0 : tempMovingItem.direction += 1;
     renderBlocks()
 }
+
 // event handling
 document.addEventListener("keydown", e=> {
     switch(e.keyCode){
@@ -97,6 +116,9 @@ document.addEventListener("keydown", e=> {
             break;
         case 40: //아래 이동
             moveBlock("top", 1);
+            break;
+        case 38: //회전
+            changeDirection();
             break;
         default:
             break;
