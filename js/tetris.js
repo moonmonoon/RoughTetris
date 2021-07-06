@@ -15,7 +15,7 @@ let downInterval;
 let tempMovingItem; //움직이기 전 저장
 
 const movingItem = { //다음블럭의 타입, 좌표 정보
-    type: "tree",
+    type: "",
     direction: 1, //블록 회전 지표
     top: 0, //블록 상하 값
     left: 0 //블록 좌우 값
@@ -30,7 +30,7 @@ function init() {
     for(let i = 0; i < GAME_ROWS; i++) {
         prependNewLine()
     }
-    renderBlocks()
+    generateNewBlock()
 }
 
 // 테트리스 칸(matrix) 생성
@@ -82,6 +82,12 @@ function seizeBlock(){
     generateNewBlock()
 }
 function generateNewBlock(){
+
+    clearInterval(downInterval); 
+    downInterval = setInterval(()=>{
+        moveBlock('top', 1)
+    },duration)
+
     const blockArray = Object.entries(BLOCKS);
     const randomIndex = Math.floor(Math.random() * blockArray.length)
     
